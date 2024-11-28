@@ -141,285 +141,126 @@ public class Main {
                     }
 
                     // Находим максимальное значение
-                    double максимальноеЗначение = findMaxValue(boxes);
+                    double максимальноеЗначение = findMaxValue.FindMaxValue(boxes);
                     System.out.println("Максимальное значение среди коробок: " + максимальноеЗначение);
 
                     System.out.println(); // Оставляем пустую строку для красоты
                     break;
 
-                case 4: // Задание с функцией
-                    List<Integer[]> moreArrays = new ArrayList<>(); // Создаём пустой список для массивов
-                    System.out.print("Введите количество массивов: ");
-                    while (!scanner.hasNextInt()) {
-                        System.out.print("Ошибка! Введите целое число: ");
-                        scanner.next(); // Очистка неверного ввода
-                    }
-                    int количествоМассивов = scanner.nextInt();
+                case 4:
+                    //Получение длины строк
+                    List<String> strings = List.of("qwerty", "asdfg", "zx");
+                    System.out.println("Изначальные списки: " + strings);
+                    List<Integer> lengths = FunctionApplier.applyFunction(strings, String::length);
+                    System.out.println("Длины строк: " + lengths);
 
-                    // Заполнение списка массивов
-                    for (int i = 0; i < количествоМассивов; i++) {
-                        System.out.print("Введите размер массива " + (i + 1) + ": ");
-                        while (!scanner.hasNextInt()) {
-                            System.out.print("Ошибка! Введите целое число: ");
-                            scanner.next(); // Очистка неверного ввода
-                        }
-                        int размерМассива = scanner.nextInt();
-                        Integer[] массив = new Integer[размерМассива]; // Изменяем на Integer[]
+                    //Преобразование отрицательных чисел в положительные
+                    List<Integer> numbers = List.of(1, -3, 7);
+                    System.out.println("Изначальные числа: " + numbers);
+                    List<Integer> absoluteValues = FunctionApplier.applyFunction(numbers,
+                            Math::abs); // Используем модуль числа
+                    System.out.println("Абсолютные значения: " + absoluteValues);
 
-                        for (int j = 0; j < размерМассива; j++) {
-                            System.out.print("Введите элемент " + (j + 1) + ": ");
-                            while (!scanner.hasNextInt()) {
-                                System.out.print("Ошибка! Введите целое число: ");
-                                scanner.next(); // Очистка неверного ввода
-                            }
-                            массив[j] = scanner.nextInt(); // Сохраняем значение как Integer
-                        }
-                        moreArrays.add(массив);
-                    }
-
-                    // Получаем максимальные значения из массивов
-                    List<Integer> maxValues = transform(moreArrays, arr -> {
-                        int max = 0;
-                        for (Integer num : arr) { // Изменяем на Integer
-                            if (num > max) {
-                                max = num; // Находим максимальное значение в массиве
-                            }
-                        }
-                        return max; // Возвращаем максимальное значение
-                    });
-
-                    System.out.println("Максимальные значения из массивов: " + maxValues); // Выводим максимальные значения
+                    //Получение максимальных значений из массивов
+                    List<int[]> arrays = List.of(new int[]{1, 2, 3}, new int[]{-1, -2, -3}, new int[]{4, 5});
+                    System.out.println("Изначальные массивы целых чисел: " + Arrays.deepToString(arrays.toArray(new int[0][])));
+                    List<Integer> maxValues = FunctionApplier.applyFunction(arrays,
+                            array -> {
+                                int max = Integer.MIN_VALUE;
+                                for (int num : array) {
+                                    if (num > max) {
+                                        max = num;
+                                    }
+                                }
+                                return max;
+                            });
+                    System.out.println("Максимальные значения из массивов: " + maxValues);
 
                     System.out.println(); // Оставляем пустую строку для красоты
                     break;
 
-                case 5: // Задание с фильтрацией
-                    while (true) {
-                        System.out.println("Выберите тип фильтрации (введите 0 для выхода):");
-                        System.out.println("1 - Фильтрация строк (длина >= 3)");
-                        System.out.println("2 - Фильтрация чисел (неположительные)");
-                        System.out.println("3 - Фильтрация массивов (без положительных элементов)");
-                        System.out.print("Ваш выбор: ");
+                case 5: // Задание с фильтром
+                    //Фильтрация строк с длиной менее 3 символов
+                    List<String> strings1 = List.of("qwerty", "asdfg", "zx");
+                    System.out.println("Изначальные строки: " + strings1);
+                    List<String> filteredStrings = Filter.filter(strings1, s -> s.length() >= 3);
+                    System.out.println("Отфильтрованные строки (длина >= 3): " + filteredStrings);
 
-                        int filterChoice = scanner.nextInt();
+                    //Фильтрация положительных чисел
+                    List<Integer> numbers1 = List.of(1, -3, 7);
+                    System.out.println("Изначальные числа: " + numbers1);
+                    List<Integer> filteredNumbers = Filter.filter(numbers1, n -> n < 0);
+                    System.out.println("Отфильтрованные отрицательные числа: " + filteredNumbers);
 
-                        if (filterChoice == 0) {
-                            System.out.println("Выход из фильтрации.");
-                            break; // Выход из цикла фильтрации
+                    //Фильтрация массивов целых чисел, в которых нет положительных элементов
+                    List<int[]> arrays1 = List.of(new int[]{1, -2, 3}, new int[]{-1, -2, -3}, new int[]{-4, -5});
+                    System.out.println("Изначальные массивы целых чисел: " + Arrays.deepToString(arrays1.toArray(new int[0][])));
+                    List<int[]> filteredArrays = Filter.filter(arrays1, array -> {
+                        for (int num : array) {
+                            if (num > 0) {
+                                return false; // Если есть положительный элемент, возвращаем false
+                            }
                         }
+                        return true; // Если положительных элементов нет, возвращаем true
+                    });
 
-                        switch (filterChoice) {
-                            case 1:
-                                List<String> strings = List.of("qwerty", "asdfg", "zx");
-                                List<String> filteredStrings = filter(strings, str -> str.length() >= 3);
-                                System.out.println("Отфильтрованные строки: " + filteredStrings);
-                                break;
+                    // Преобразование списка массивов в массив массивов
+                    int[][] resultArray = filteredArrays.toArray(new int[0][]);
+                    System.out.println("Отфильтрованные массивы (без положительных элементов): " + Arrays.deepToString(resultArray));
 
-                            case 2:
-                                List<Integer> numbers = List.of(1, -3, 7);
-                                List<Integer> filteredNumbers = filter(numbers, num -> num <= 0);
-                                System.out.println("Отфильтрованные числа: " + filteredNumbers);
-                                break;
-
-                            case 3:
-                                List<Integer[]> arrays = new ArrayList<>();
-                                arrays.add(new Integer[]{1, -1, -2});
-                                arrays.add(new Integer[]{-3, -4});
-                                arrays.add(new Integer[]{2, 3});
-                                arrays.add(new Integer[]{-5, -6});
-                                List<Integer[]> filteredArrays = filter(arrays, arr -> {
-                                    for (Integer num : arr) {
-                                        if (num > 0) {
-                                            return false; // Если есть положительный элемент, возвращаем false
-                                        }
-                                    }
-                                    return true; // Если положительных нет, возвращаем true
-                                });
-
-                                // Выводим отфильтрованные массивы
-                                System.out.println("Отфильтрованные массивы:");
-                                for (Integer[] filteredArray : filteredArrays) {
-                                    System.out.println(Arrays.toString(filteredArray)); // Выводим каждый отфильтрованный массив
-                                }
-                                break;
-
-                            default:
-                                System.out.println("Неверный выбор фильтрации.");
-                                break;
-                        }
-                        System.out.println(); // Оставляем пустую строку для красоты
-                    }
+                    System.out.println(); // Оставляем пустую строку для красоты
                     break;
 
                 case 6: // Задание с сокращением
-                    // 1: Объединение строк
-                    List<String> stringList = List.of("qwerty", "asdfg", "zx");
-                    String concatenatedString = reduce(stringList, (list) -> {
-                        StringBuilder sb = new StringBuilder(); // Используем StringBuilder для формирования новой строки
-                        for (String str : list) { // Добавляем из списка строки в новую строку
-                            sb.append(str);
-                        }
-                        return sb.toString();
-                    });
-                    System.out.println("1. Объединенная строка: " + concatenatedString);
+                    //Объединение строк
+                    List<String> strings2 = List.of("qwerty", "asdfg", "zx");
+                    System.out.println("Изначальные строки: " + strings2); // Выводим изначальные строки
+                    String concatenatedString = Reducer.reduce(strings2, (s1, s2) -> s1 + s2);
+                    System.out.println("Объединенные строки: " + concatenatedString);
 
-                    // 2: Сумма чисел
-                    List<Integer> numberList = List.of(1, -3, 7);
-                    Integer sum = reduce(numberList, (list) -> {
-                        int total = 0;
-                        for (Integer num : list) {
-                            total += num;
-                        }
-                        return total;
-                    });
-                    System.out.println("2. Сумма чисел: " + sum);
+                    //Суммирование чисел
+                    List<Integer> numbers2 = List.of(1, -3, 7);
+                    System.out.println("Изначальные числа: " + numbers2); // Выводим изначальные числа
+                    Integer sum = Reducer.reduce(numbers2, Integer::sum);
+                    System.out.println("Сумма чисел: " + sum);
 
-                    // 3: Общее количество элементов в списках
-                    List<List<Integer>> listOfLists = List.of(
-                            List.of(1, 2, 3),
-                            List.of(4, 5),
-                            List.of(6, 7, 8, 9)
-                    );
-
-                    // Здесь мы используем reduce для подсчета общего количества элементов
-                    Integer totalCount = reduce(listOfLists, (lists) -> {
-                        int count = 0; // Начинаем с нуля
-                        for (List<Integer> innerList : lists) {
-                            count += innerList.size(); // Суммируем размеры всех вложенных списков
-                        }
-                        return count; // Возвращаем общее количество элементов
-                    });
-                    System.out.println("3. Общее количество элементов: " + totalCount);
+                    //Подсчет общего количества элементов в списках
+                    List<List<Integer>> listOfLists = List.of(List.of(1, 2), List.of(3, 4, 5), List.of(6));
+                    System.out.println("Изначальные списки: " + listOfLists); // Выводим изначальные списки
+                    Integer totalCount = Reducer.reduce(listOfLists, (list1, list2) -> {
+                        List<Integer> mergedList = new ArrayList<>(list1); // Создаем изменяемый список на основе list1
+                        mergedList.addAll(list2); // Объединяем с list2
+                        return mergedList; // Возвращаем объединенный список
+                    }).size();
+                    System.out.println("Общее количество элементов во всех списках: " + totalCount);
 
                     System.out.println(); // Оставляем пустую строку для красоты
                     break;
 
-                case 7: // Задание с коллекционированием
-                    // 1. Разделение на положительные и отрицательные числа
-                    List<Integer> numbers = List.of(1, -3, 7); // Создаем список из целых чисел
-                    Map<Boolean, List<Integer>> splitNumbers = splitCollection(
-                            numbers, // Список, который нужно разделить
-                            () -> new ArrayList<>(), // Используем лямбда-выражение для создания нового ArrayList
-                            num -> num > 0 // Условие для разделения
-                    );
+                case 7:
+                    //Разделение на положительные и отрицательные числа
+                    List<Integer> numbers3 = List.of(1, -3, 7);
+                    System.out.println("Изначальные числа: " + numbers3);
+                    Map<Boolean, List<Integer>> partitionedNumbers = Collector.partition(numbers3, n -> n > 0);
+                    System.out.println("Положительные числа: " + partitionedNumbers.get(true));
+                    System.out.println("Отрицательные числа: " + partitionedNumbers.get(false));
+                    System.out.println(); // Оставляем пустую строку для красоты
 
-                    System.out.println("Положительные числа: " + splitNumbers.get(true));
-                    System.out.println("Отрицательные числа: " + splitNumbers.get(false));
+                    //Группировка строк по длине
+                    List<String> strings3 = List.of("qwerty", "asdfg", "zx", "qw");
+                    System.out.println("Изначальные строки: " + strings3);
+                    Map<Integer, List<String>> groupedStrings = Collector.groupByLength(strings3);
+                    System.out.println("Группировка строк по длине: " + groupedStrings);
+                    System.out.println(); // Оставляем пустую строку для красоты
 
-                    // 2. Группировка строк по длине
-                    List<String> strings = List.of("qwerty", "asdfg", "zx", "qw");
-                    Map<Integer, List<String>> groupedStrings = groupByLength(
-                            strings, // Список строк, который нужно сгруппировать.
-                            () -> new ArrayList<>() // Способ создания нового списка для каждой группы.
-                    );
-
-                    System.out.println("Строки, сгруппированные по длине:");
-                    for (Map.Entry<Integer, List<String>> entry : groupedStrings.entrySet()) {
-                        System.out.println("Длина " + entry.getKey() + ": " + entry.getValue());
-                    }
-
-                    // 3. Уникальные строки
-                    List<String> uniqueStrings = List.of("qwerty", "asdfg", "qwerty", "qw");
-                    Set<String> uniqueSet = getUniqueSet(
-                            uniqueStrings, // Исходный список, из которого нужно получить уникальные значения.
-                            () -> new HashSet<>() // Способ создания нового набора
-                    );
-
-                    System.out.println("Уникальные строки: " + uniqueSet);
-
+                    //Создание набора без дубликатов
+                    List<String> duplicateStrings = List.of("qwerty", "asdfg", "qwerty", "qw");
+                    System.out.println("Изначальные строки с дубликатами: " + duplicateStrings);
+                    Set<String> uniqueStrings = Collector.toSet(duplicateStrings);
+                    System.out.println("Набор без дубликатов: " + uniqueStrings);
                     System.out.println(); // Оставляем пустую строку для красоты
                     break;
             }
         }
-    }
-
-    public static double findMaxValue(List<Box<? extends Number>> boxes) { // метод для поиска максимального значения из коробок из списка
-        double max = 0; // Начальное значение для максимума
-
-        for (Box<? extends Number> box : boxes) { // Проверяем все коробки и находим максимальное значение
-            if (!box.isEmpty()) { // Проверяем, что коробка не пустая
-                double value = box.get().doubleValue(); // Получаем значение и преобразуем в double
-                if (value > max) {
-                    max = value; // Обновляем максимум
-                }
-            }
-        }
-        return max;
-    }
-
-    // Метод преобразования
-    public static <T, P> List<P> transform(List<T[]> inputList, Function<T[], P> function) {
-        List<P> resultList = new ArrayList<>(); // Создаём пустой Р-список
-        for (T[] item : inputList) { // Проходим по каждому массиву в списке
-            resultList.add(function.apply(item)); // Применяем функцию к элементу и добавляем в новый список
-        }
-        return resultList;
-    }
-
-    // Метод фильтрации
-    public static <T> List<T> filter(List<T> inputList, Predicate<T> predicate) {
-        List<T> resultList = new ArrayList<>(); // Создаём пустой результирующий список
-        for (T item : inputList) { // Проходимся по списку
-            if (predicate.test(item)) { // Проверяем условие
-                resultList.add(item); // Если условие выполнено, добавляем элемент в результат
-            }
-        }
-        return resultList; // Возвращаем отфильтрованный список
-    }
-
-    // Метод Сокращения
-    public static <T, R> R reduce(List<T> list, Function<List<T>, R> reducer) {
-        if (list == null || list.isEmpty()) { // Проверяем, пуст ли список
-            return null; // Возвращаем null или значение по умолчанию в зависимости от ваших требований
-        }
-        return reducer.apply(list); // Применение функции reducer к переданному списку
-    }
-
-
-    // Метод для возврата значения по умолчанию в зависимости от типа T
-    @SuppressWarnings("unchecked") //  Подавляем предупреждения компилятора о небезопасных операциях, связанных с приведением типов.
-    private static <T> T getDefaultValue() {
-        return (T) (Integer) 0; // Возвращаем 0 для Integer и других типов
-    }
-
-    // Метод для разделения коллекции
-    public static <T, P extends Collection<T>> Map<Boolean, P> splitCollection(
-            List<T> source, // Список, который нужно разделить
-            Supplier<P> collectionSupplier, // Способ создания новой коллекции
-            Predicate<T> predicate // предикат (условие)
-    ) {
-        Map<Boolean, P> result = new HashMap<>(); // Создается Map<Boolean, P>, где true соответствует подколлекции, удовлетворяющей условию, а false — остальным элементам.
-        result.put(true, collectionSupplier.get());
-        result.put(false, collectionSupplier.get());
-
-        for (T item : source) { // Проходится по каждому элементу исходного списка
-            result.get(predicate.test(item)).add(item);
-        }
-
-        return result;
-    }
-
-    // Метод для группировки строк по длине
-    public static Map<Integer, List<String>> groupByLength(
-            List<String> source, // Список строк, который нужно сгруппировать.
-            Supplier<List<String>> collectionSupplier) { // Способ создания нового списка для каждой группы.
-        Map<Integer, List<String>> result = new HashMap<>(); // Создается Map<Integer, List<String>>, где ключ — это длина строки, а значение — список строк этой длины.
-
-        for (String str : source) { //  Используется метод computeIfAbsent, который добавляет строку в соответствующий список, создавая новый список, если ключ (длина) отсутствует.
-            result.computeIfAbsent(str.length(), k -> collectionSupplier.get()).add(str);
-        }
-
-        return result;
-    }
-
-    // Метод для получения уникальных значений
-    public static <T> Set<T> getUniqueSet(
-            List<T> source, // Исходный список, из которого нужно получить уникальные значения.
-            Supplier<Set<T>> collectionSupplier) { // Способ создания нового набора
-        Set<T> resultSet = collectionSupplier.get(); // Создается новый набор
-        for (T item : source) { // Проходится по каждому элементу исходного списка и добавляет его в набор, не допуская дубликатов
-            resultSet.add(item);
-        }
-        return resultSet;
     }
 }
